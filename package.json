@@ -1,0 +1,13 @@
+{
+  "name": "multiplatform-sdk-monorepo",
+  "private": true,
+  "workspaces": [
+    "npm",
+    "web"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "dev": "npm run dev --workspace=web"
+  }
+}

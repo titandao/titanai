@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+members = [
+    "rust",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/yourusername/multiplatform-sdk"
+description = "Multi-platform SDK with Rust, Python, and npm packages"

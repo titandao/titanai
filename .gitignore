@@ -1,0 +1,259 @@
+# ============================================
+# TitanAI 项目 - Git 忽略配置
+# ============================================
+
+# ============ Rust ============
+# 编译输出
+target/
+**/*.rs.bk
+*.pdb
+
+# Cargo 锁文件（库项目不需要提交）
+Cargo.lock
+
+# ============ Python ============
+# 字节码文件
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Python 分发
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 虚拟环境
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# 测试和覆盖率
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# ============ Node.js / npm ============
+# 依赖目录
+node_modules/
+jspm_packages/
+web/
+
+# 构建输出
+npm/dist/
+npm/.turbo/
+npm/.rpt2_cache/
+npm/.rts2_cache_cjs/
+npm/.rts2_cache_es/
+npm/.rts2_cache_umd/
+
+# 日志文件
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# 环境变量
+.npm
+.eslintcache
+.stylelintcache
+
+# ============ Next.js (Web) ============
+# 构建输出
+web/.next/
+web/out/
+
+# Vercel
+web/.vercel/
+.vercel
+
+# Turbopack
+web/.turbo/
+
+# ============ IDE 和编辑器 ============
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ============ 操作系统 ============
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ============ 环境变量和密钥 ============
+# 通用环境文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# 密钥和证书
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+.secrets/
+
+# ============ 构建和缓存 ============
+# 通用缓存目录
+.cache/
+.parcel-cache/
+.turbo/
+
+# 临时文件
+*.tmp
+*.temp
+tmp/
+temp/
+
+# ============ 测试覆盖率 ============
+coverage/
+*.lcov
+.nyc_output/
+lib-cov/
+.grunt/
+.lock-wscript/
+.node_repl_history/
+
+# ============ 文档 ============
+# 生成的文档
+docs/_build/
+site/
+
+# ============ 包管理器 ============
+# Yarn
+.yarn-integrity
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# pnpm
+.pnpm-debug.log
+.pnpm-store/
+
+# ============ 其他 ============
+# 备份文件
+*.bak
+*.backup
+*.old
+
+# 压缩文件
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+
+# 大文件（示例）
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.pdf
+
+# 调试文件
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# ============ 特定于项目的忽略 ============
+# 本地开发配置
+local.settings.json
+*.local.json
+
+# 数据文件（如果有）
+data/
+*.csv.gz
+*.json.gz
+
+# 日志目录
+logs/
+*.log.*
+
+# 上传文件
+uploads/
+downloads/
