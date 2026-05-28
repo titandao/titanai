@@ -18,12 +18,17 @@ import {
   CHATGLM_BASE_URL,
   SILICONFLOW_BASE_URL,
   AI302_BASE_URL,
+  OPENROUTER_BASE_URL,
+  TITANAI_BASE_URL,
+  SHING_BASE_URL,
+  OLLAMA_BASE_URL,
+  LMSTUDIO_BASE_URL,
 } from "../constant";
 import { getHeaders } from "../client/api";
 import { getClientConfig } from "../config/client";
 import { createPersistStore } from "../utils/store";
 import { ensure } from "../utils/clone";
-import { DEFAULT_CONFIG } from "./config";
+import { DEFAULT_CONFIG, ModelType } from "./config";
 import { getModelProvider } from "../utils/model";
 
 let fetchState = 0; // 0 not fetch, 1 fetching, 2 done
@@ -61,6 +66,12 @@ const DEFAULT_SILICONFLOW_URL = isApp
   : ApiPath.SiliconFlow;
 
 const DEFAULT_AI302_URL = isApp ? AI302_BASE_URL : ApiPath["302.AI"];
+
+const DEFAULT_OPENROUTER_URL = isApp ? OPENROUTER_BASE_URL : OPENROUTER_BASE_URL;
+const DEFAULT_TITANAI_URL = isApp ? TITANAI_BASE_URL : TITANAI_BASE_URL;
+const DEFAULT_SHING_URL = isApp ? SHING_BASE_URL : SHING_BASE_URL;
+const DEFAULT_OLLAMA_URL = isApp ? OLLAMA_BASE_URL : OLLAMA_BASE_URL;
+const DEFAULT_LMSTUDIO_URL = isApp ? LMSTUDIO_BASE_URL : LMSTUDIO_BASE_URL;
 
 const DEFAULT_ACCESS_STATE = {
   accessCode: "",
@@ -138,6 +149,26 @@ const DEFAULT_ACCESS_STATE = {
   // 302.AI
   ai302Url: DEFAULT_AI302_URL,
   ai302ApiKey: "",
+
+  // openrouter
+  openrouterUrl: DEFAULT_OPENROUTER_URL,
+  openrouterApiKey: "",
+
+  // titanai
+  titanaiUrl: DEFAULT_TITANAI_URL,
+  titanaiApiKey: "",
+
+  // shing
+  shingUrl: DEFAULT_SHING_URL,
+  shingApiKey: "",
+
+  // ollama
+  ollamaUrl: DEFAULT_OLLAMA_URL,
+  ollamaApiKey: "",
+
+  // lmstudio
+  lmstudioUrl: DEFAULT_LMSTUDIO_URL,
+  lmstudioApiKey: "",
 
   // server config
   needCode: true,
@@ -249,6 +280,9 @@ export const useAccessStore = createPersistStore(
         (this.enabledAccessControl() && ensure(get(), ["accessCode"]))
       );
     },
+    get fetchState() {
+      return fetchState;
+    },
     fetch() {
       if (fetchState > 0 || getClientConfig()?.buildMode === "export") return;
       fetchState = 1;
@@ -272,7 +306,20 @@ export const useAccessStore = createPersistStore(
         })
         .then((res: DangerConfig) => {
           console.log("[Config] got config from server", res);
-          set(() => ({ ...res }));
+          if ((res as any).openrouterApiKey) {
+            DEFAULT_CONFIG.modelConfig.providerName =
+              ServiceProvider.OpenRouter as any;
+            DEFAULT_CONFIG.modelConfig.model = "openrouter/auto" as ModelType;
+            set(() => ({
+              ...res,
+              openrouterUrl: OPENROUTER_BASE_URL,
+              openrouterApiKey: (res as any).openrouterApiKey,
+              provider: ServiceProvider.OpenRouter,
+              useCustomConfig: true,
+            }));
+          } else {
+            set(() => ({ ...res }));
+          }
         })
         .catch(() => {
           console.error("[Config] failed to fetch config");
@@ -284,7 +331,7 @@ export const useAccessStore = createPersistStore(
   }),
   {
     name: StoreKey.Access,
-    version: 2,
+    version: 3,
     migrate(persistedState, version) {
       if (version < 2) {
         const state = persistedState as {
@@ -295,6 +342,13 @@ export const useAccessStore = createPersistStore(
         };
         state.openaiApiKey = state.token;
         state.azureApiVersion = "2023-08-01-preview";
+      }
+
+      if (version < 3) {
+        const state = persistedState as Record<string, unknown>;
+        delete state.openrouterUrl;
+        delete state.titanaiUrl;
+        delete state.shingUrl;
       }
 
       return persistedState as any;

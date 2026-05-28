@@ -6,7 +6,6 @@ import EmojiPicker, {
 
 import { ModelType } from "../store";
 
-import BotIconDefault from "../icons/llm-icons/default.svg";
 import BotIconOpenAI from "../icons/llm-icons/openai.svg";
 import BotIconGemini from "../icons/llm-icons/gemini.svg";
 import BotIconGemma from "../icons/llm-icons/gemma.svg";
@@ -46,8 +45,6 @@ export function AvatarPicker(props: {
 }
 
 export function Avatar(props: { model?: ModelType; avatar?: string }) {
-  let LlmIcon = BotIconDefault;
-
   if (props.model) {
     const modelName = props.model.toLowerCase();
 
@@ -59,42 +56,98 @@ export function Avatar(props: { model?: ModelType; avatar?: string }) {
       modelName.startsWith("o1") ||
       modelName.startsWith("o3")
     ) {
-      LlmIcon = BotIconOpenAI;
+      return (
+        <div className="no-dark">
+          <BotIconOpenAI className="user-avatar" width={30} height={30} />
+        </div>
+      );
     } else if (modelName.startsWith("gemini")) {
-      LlmIcon = BotIconGemini;
+      return (
+        <div className="no-dark">
+          <BotIconGemini className="user-avatar" width={30} height={30} />
+        </div>
+      );
     } else if (modelName.startsWith("gemma")) {
-      LlmIcon = BotIconGemma;
+      return (
+        <div className="no-dark">
+          <BotIconGemma className="user-avatar" width={30} height={30} />
+        </div>
+      );
     } else if (modelName.startsWith("claude")) {
-      LlmIcon = BotIconClaude;
+      return (
+        <div className="no-dark">
+          <BotIconClaude className="user-avatar" width={30} height={30} />
+        </div>
+      );
     } else if (modelName.includes("llama")) {
-      LlmIcon = BotIconMeta;
+      return (
+        <div className="no-dark">
+          <BotIconMeta className="user-avatar" width={30} height={30} />
+        </div>
+      );
     } else if (modelName.startsWith("mixtral") || modelName.startsWith("codestral")) {
-      LlmIcon = BotIconMistral;
+      return (
+        <div className="no-dark">
+          <BotIconMistral className="user-avatar" width={30} height={30} />
+        </div>
+      );
     } else if (modelName.includes("deepseek")) {
-      LlmIcon = BotIconDeepseek;
+      return (
+        <div className="no-dark">
+          <BotIconDeepseek className="user-avatar" width={30} height={30} />
+        </div>
+      );
     } else if (modelName.startsWith("moonshot")) {
-      LlmIcon = BotIconMoonshot;
+      return (
+        <div className="no-dark">
+          <BotIconMoonshot className="user-avatar" width={30} height={30} />
+        </div>
+      );
     } else if (modelName.startsWith("qwen")) {
-      LlmIcon = BotIconQwen;
+      return (
+        <div className="no-dark">
+          <BotIconQwen className="user-avatar" width={30} height={30} />
+        </div>
+      );
     } else if (modelName.startsWith("ernie")) {
-      LlmIcon = BotIconWenxin;
+      return (
+        <div className="no-dark">
+          <BotIconWenxin className="user-avatar" width={30} height={30} />
+        </div>
+      );
     } else if (modelName.startsWith("grok")) {
-      LlmIcon = BotIconGrok;
+      return (
+        <div className="no-dark">
+          <BotIconGrok className="user-avatar" width={30} height={30} />
+        </div>
+      );
     } else if (modelName.startsWith("hunyuan")) {
-      LlmIcon = BotIconHunyuan;
+      return (
+        <div className="no-dark">
+          <BotIconHunyuan className="user-avatar" width={30} height={30} />
+        </div>
+      );
     } else if (modelName.startsWith("doubao") || modelName.startsWith("ep-")) {
-      LlmIcon = BotIconDoubao;
+      return (
+        <div className="no-dark">
+          <BotIconDoubao className="user-avatar" width={30} height={30} />
+        </div>
+      );
     } else if (
       modelName.includes("glm") ||
       modelName.startsWith("cogview-") ||
       modelName.startsWith("cogvideox-")
     ) {
-      LlmIcon = BotIconChatglm;
+      return (
+        <div className="no-dark">
+          <BotIconChatglm className="user-avatar" width={30} height={30} />
+        </div>
+      );
     }
 
     return (
       <div className="no-dark">
-        <LlmIcon className="user-avatar" width={30} height={30} />
+        <img src="/titan.jpg" className="user-avatar" width={30} height={30} style={{ borderRadius: "50%", objectFit: "cover" }} />
       </div>
     );
   }

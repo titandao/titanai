@@ -9,7 +9,6 @@ import CopyIcon from "../icons/copy.svg";
 import ClearIcon from "../icons/clear.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 import EditIcon from "../icons/edit.svg";
-import FireIcon from "../icons/fire.svg";
 import EyeIcon from "../icons/eye.svg";
 import DownloadIcon from "../icons/download.svg";
 import UploadIcon from "../icons/upload.svg";
@@ -19,7 +18,6 @@ import ConfirmIcon from "../icons/confirm.svg";
 import ConnectionIcon from "../icons/connection.svg";
 import CloudSuccessIcon from "../icons/cloud-success.svg";
 import CloudFailIcon from "../icons/cloud-fail.svg";
-import { trackSettingsPageGuideToCPaymentClick } from "../utils/auth-settings-events";
 import {
   Input,
   List,
@@ -76,6 +74,11 @@ import {
   DeepSeek,
   SiliconFlow,
   AI302,
+  OPENROUTER_BASE_URL,
+  TITANAI_BASE_URL,
+  SHING_BASE_URL,
+  OLLAMA_BASE_URL,
+  LMSTUDIO_BASE_URL,
 } from "../constant";
 import { Prompt, SearchService, usePromptStore } from "../store/prompt";
 import { ErrorBoundary } from "./error";
@@ -689,31 +692,6 @@ export function Settings() {
           accessStore.update(
             (access) => (access.accessCode = e.currentTarget.value),
           );
-        }}
-      />
-    </ListItem>
-  );
-
-  const saasStartComponent = (
-    <ListItem
-      className={styles["subtitle-button"]}
-      title={
-        Locale.Settings.Access.SaasStart.Title +
-        `${Locale.Settings.Access.SaasStart.Label}`
-      }
-      subTitle={Locale.Settings.Access.SaasStart.SubTitle}
-    >
-      <IconButton
-        aria={
-          Locale.Settings.Access.SaasStart.Title +
-          Locale.Settings.Access.SaasStart.ChatNow
-        }
-        icon={<FireIcon />}
-        type={"primary"}
-        text={Locale.Settings.Access.SaasStart.ChatNow}
-        onClick={() => {
-          trackSettingsPageGuideToCPaymentClick();
-          window.location.href = SAAS_CHAT_URL;
         }}
       />
     </ListItem>
@@ -1459,6 +1437,194 @@ export function Settings() {
     </>
   );
 
+  const openrouterConfigComponent = accessStore.provider ===
+    ServiceProvider.OpenRouter && (
+    <>
+      <ListItem
+        title="OpenRouter Endpoint"
+        subTitle={"OpenRouter API Base URL: " + OPENROUTER_BASE_URL}
+      >
+        <input
+          aria-label="OpenRouter Endpoint"
+          type="text"
+          value={accessStore.openrouterUrl}
+          placeholder={OPENROUTER_BASE_URL}
+          onChange={(e) =>
+            accessStore.update(
+              (access) => (access.openrouterUrl = e.currentTarget.value),
+            )
+          }
+        ></input>
+      </ListItem>
+      <ListItem
+        title="OpenRouter API Key"
+        subTitle="Your OpenRouter API key"
+      >
+        <PasswordInput
+          aria-label="OpenRouter API Key"
+          value={accessStore.openrouterApiKey}
+          type="text"
+          placeholder="sk-or-..."
+          onChange={(e) => {
+            accessStore.update(
+              (access) => (access.openrouterApiKey = e.currentTarget.value),
+            );
+          }}
+        />
+      </ListItem>
+    </>
+  );
+
+  const titanaiConfigComponent = accessStore.provider ===
+    ServiceProvider.TitanAI && (
+    <>
+      <ListItem
+        title="TitanAI Endpoint"
+        subTitle={"TitanAI API Base URL: " + TITANAI_BASE_URL}
+      >
+        <input
+          aria-label="TitanAI Endpoint"
+          type="text"
+          value={accessStore.titanaiUrl}
+          placeholder={TITANAI_BASE_URL}
+          onChange={(e) =>
+            accessStore.update(
+              (access) => (access.titanaiUrl = e.currentTarget.value),
+            )
+          }
+        ></input>
+      </ListItem>
+      <ListItem
+        title="TitanAI API Key"
+        subTitle="Your TitanAI API key"
+      >
+        <PasswordInput
+          aria-label="TitanAI API Key"
+          value={accessStore.titanaiApiKey}
+          type="text"
+          placeholder="sk-..."
+          onChange={(e) => {
+            accessStore.update(
+              (access) => (access.titanaiApiKey = e.currentTarget.value),
+            );
+          }}
+        />
+      </ListItem>
+    </>
+  );
+
+  const shingConfigComponent = accessStore.provider ===
+    ServiceProvider.Shing && (
+    <>
+      <ListItem
+        title="Shing Endpoint"
+        subTitle={"Shing API Base URL: " + SHING_BASE_URL}
+      >
+        <input
+          aria-label="Shing Endpoint"
+          type="text"
+          value={accessStore.shingUrl}
+          placeholder={SHING_BASE_URL}
+          onChange={(e) =>
+            accessStore.update(
+              (access) => (access.shingUrl = e.currentTarget.value),
+            )
+          }
+        ></input>
+      </ListItem>
+      <ListItem
+        title="Shing API Key"
+        subTitle="Your Shing API key"
+      >
+        <PasswordInput
+          aria-label="Shing API Key"
+          value={accessStore.shingApiKey}
+          type="text"
+          placeholder="sk-..."
+          onChange={(e) => {
+            accessStore.update(
+              (access) => (access.shingApiKey = e.currentTarget.value),
+            );
+          }}
+        />
+      </ListItem>
+    </>
+  );
+
+  const ollamaConfigComponent = accessStore.provider === ServiceProvider.Ollama && (
+    <>
+      <ListItem
+        title="Ollama Endpoint"
+        subTitle={"Ollama API Base URL: " + OLLAMA_BASE_URL}
+      >
+        <input
+          aria-label="Ollama Endpoint"
+          type="text"
+          value={accessStore.ollamaUrl}
+          placeholder={OLLAMA_BASE_URL}
+          onChange={(e) =>
+            accessStore.update(
+              (access) => (access.ollamaUrl = e.currentTarget.value),
+            )
+          }
+        ></input>
+      </ListItem>
+      <ListItem
+        title="Ollama API Key"
+        subTitle="Your Ollama API key (leave blank if not required)"
+      >
+        <PasswordInput
+          aria-label="Ollama API Key"
+          value={accessStore.ollamaApiKey}
+          type="text"
+          placeholder="sk-..."
+          onChange={(e) => {
+            accessStore.update(
+              (access) => (access.ollamaApiKey = e.currentTarget.value),
+            );
+          }}
+        />
+      </ListItem>
+    </>
+  );
+
+  const lmstudioConfigComponent = accessStore.provider === ServiceProvider.LMStudio && (
+    <>
+      <ListItem
+        title="LM Studio Endpoint"
+        subTitle={"LM Studio API Base URL: " + LMSTUDIO_BASE_URL}
+      >
+        <input
+          aria-label="LM Studio Endpoint"
+          type="text"
+          value={accessStore.lmstudioUrl}
+          placeholder={LMSTUDIO_BASE_URL}
+          onChange={(e) =>
+            accessStore.update(
+              (access) => (access.lmstudioUrl = e.currentTarget.value),
+            )
+          }
+        ></input>
+      </ListItem>
+      <ListItem
+        title="LM Studio API Key"
+        subTitle="Your LM Studio API key (leave blank if not required)"
+      >
+        <PasswordInput
+          aria-label="LM Studio API Key"
+          value={accessStore.lmstudioApiKey}
+          type="text"
+          placeholder="sk-..."
+          onChange={(e) => {
+            accessStore.update(
+              (access) => (access.lmstudioApiKey = e.currentTarget.value),
+            );
+          }}
+        />
+      </ListItem>
+    </>
+  );
+
   const ai302ConfigComponent = accessStore.provider === ServiceProvider["302.AI"] && (
     <>
       <ListItem
@@ -1816,7 +1982,6 @@ export function Settings() {
         </List>
 
         <List id={SlotID.CustomModel}>
-          {saasStartComponent}
           {accessCodeComponent}
 
           {!accessStore.hideUserApiKey && (
@@ -1863,6 +2028,11 @@ export function Settings() {
                   {XAIConfigComponent}
                   {chatglmConfigComponent}
                   {siliconflowConfigComponent}
+                  {openrouterConfigComponent}
+                  {titanaiConfigComponent}
+                  {shingConfigComponent}
+                  {ollamaConfigComponent}
+                  {lmstudioConfigComponent}
                   {ai302ConfigComponent}
                 </>
               )}

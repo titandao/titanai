@@ -197,8 +197,7 @@ export class ClientApi {
       .concat([
         {
           from: "human",
-          value:
-            "Share from [NextChat]: https://github.com/Yidadaa/ChatGPT-Next-Web",
+          value: "Share from [TitanGPT]: https://github.com/titandao/TitanGPT",
         },
       ]);
     // 敬告二开开发者们，为了开源大模型的发展，请不要修改上述消息，此消息用于后续数据清洗使用
@@ -256,20 +255,27 @@ export function getHeaders(ignoreHeaders: boolean = false) {
 
   function getConfig() {
     const modelConfig = chatStore.currentSession().mask.modelConfig;
-    const isGoogle = modelConfig.providerName === ServiceProvider.Google;
-    const isAzure = modelConfig.providerName === ServiceProvider.Azure;
-    const isAnthropic = modelConfig.providerName === ServiceProvider.Anthropic;
-    const isBaidu = modelConfig.providerName == ServiceProvider.Baidu;
-    const isByteDance = modelConfig.providerName === ServiceProvider.ByteDance;
-    const isAlibaba = modelConfig.providerName === ServiceProvider.Alibaba;
-    const isMoonshot = modelConfig.providerName === ServiceProvider.Moonshot;
-    const isIflytek = modelConfig.providerName === ServiceProvider.Iflytek;
-    const isDeepSeek = modelConfig.providerName === ServiceProvider.DeepSeek;
-    const isXAI = modelConfig.providerName === ServiceProvider.XAI;
-    const isChatGLM = modelConfig.providerName === ServiceProvider.ChatGLM;
-    const isSiliconFlow =
-      modelConfig.providerName === ServiceProvider.SiliconFlow;
-    const isAI302 = modelConfig.providerName === ServiceProvider["302.AI"];
+    const providerName = accessStore.useCustomConfig
+      ? accessStore.provider
+      : modelConfig.providerName;
+    const isGoogle = providerName === ServiceProvider.Google;
+    const isAzure = providerName === ServiceProvider.Azure;
+    const isAnthropic = providerName === ServiceProvider.Anthropic;
+    const isBaidu = providerName == ServiceProvider.Baidu;
+    const isByteDance = providerName === ServiceProvider.ByteDance;
+    const isAlibaba = providerName === ServiceProvider.Alibaba;
+    const isMoonshot = providerName === ServiceProvider.Moonshot;
+    const isIflytek = providerName === ServiceProvider.Iflytek;
+    const isDeepSeek = providerName === ServiceProvider.DeepSeek;
+    const isXAI = providerName === ServiceProvider.XAI;
+    const isChatGLM = providerName === ServiceProvider.ChatGLM;
+    const isSiliconFlow = providerName === ServiceProvider.SiliconFlow;
+    const isAI302 = providerName === ServiceProvider["302.AI"];
+    const isOpenRouter = providerName === ServiceProvider.OpenRouter;
+    const isTitanAI = providerName === ServiceProvider.TitanAI;
+    const isShing = providerName === ServiceProvider.Shing;
+    const isOllama = providerName === ServiceProvider.Ollama;
+    const isLMStudio = providerName === ServiceProvider.LMStudio;
     const isEnabledAccessControl = accessStore.enabledAccessControl();
     const apiKey = isGoogle
       ? accessStore.googleApiKey
@@ -297,6 +303,18 @@ export function getHeaders(ignoreHeaders: boolean = false) {
         : ""
       : isAI302
       ? accessStore.ai302ApiKey
+      : isOpenRouter
+      ? accessStore.openrouterApiKey
+      : isTitanAI
+      ? accessStore.titanaiApiKey
+      : isShing
+      ? accessStore.shingApiKey
+      : isOllama
+      ? accessStore.ollamaApiKey
+      : isLMStudio
+      ? accessStore.lmstudioApiKey
+      : accessStore.openrouterApiKey
+      ? accessStore.openrouterApiKey
       : accessStore.openaiApiKey;
     return {
       isGoogle,
@@ -312,6 +330,11 @@ export function getHeaders(ignoreHeaders: boolean = false) {
       isChatGLM,
       isSiliconFlow,
       isAI302,
+      isOpenRouter,
+      isTitanAI,
+      isShing,
+      isOllama,
+      isLMStudio,
       apiKey,
       isEnabledAccessControl,
     };
@@ -341,6 +364,11 @@ export function getHeaders(ignoreHeaders: boolean = false) {
     isChatGLM,
     isSiliconFlow,
     isAI302,
+    isOpenRouter,
+    isTitanAI,
+    isShing,
+    isOllama,
+    isLMStudio,
     apiKey,
     isEnabledAccessControl,
   } = getConfig();
@@ -356,7 +384,13 @@ export function getHeaders(ignoreHeaders: boolean = false) {
 
   if (bearerToken) {
     headers[authHeader] = bearerToken;
-  } else if (isEnabledAccessControl && validString(accessStore.accessCode)) {
+  } else if (
+    !accessStore.useCustomConfig &&
+    isEnabledAccessControl &&
+    validString(accessStore.accessCode) &&
+    !validString(accessStore.openrouterApiKey) &&
+    accessStore.fetchState !== 1
+  ) {
     headers["Authorization"] = getBearerToken(
       ACCESS_CODE_PREFIX + accessStore.accessCode,
     );

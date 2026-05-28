@@ -1,12 +1,12 @@
-export const OWNER = "ChatGPTNextWeb";
-export const REPO = "ChatGPT-Next-Web";
+export const OWNER = "titandao";
+export const REPO = "TitanGPT";
 export const REPO_URL = `https://github.com/${OWNER}/${REPO}`;
-export const PLUGINS_REPO_URL = `https://github.com/${OWNER}/NextChat-Awesome-Plugins`;
+export const PLUGINS_REPO_URL = `https://github.com/${OWNER}/TitanGPT-Awesome-Plugins`;
 export const ISSUE_URL = `https://github.com/${OWNER}/${REPO}/issues`;
 export const UPDATE_URL = `${REPO_URL}#keep-updated`;
 export const RELEASE_URL = `${REPO_URL}/releases`;
-export const FETCH_COMMIT_URL = `https://api.github.com/repos/${OWNER}/${REPO}/commits?per_page=1`;
-export const FETCH_TAG_URL = `https://api.github.com/repos/${OWNER}/${REPO}/tags?per_page=1`;
+export const FETCH_COMMIT_URL = `https://api.github.com/repos/ChatGPTNextWeb/ChatGPT-Next-Web/commits?per_page=1`;
+export const FETCH_TAG_URL = `https://api.github.com/repos/ChatGPTNextWeb/ChatGPT-Next-Web/tags?per_page=1`;
 export const RUNTIME_CONFIG_DOM = "danger-runtime-config";
 
 export const STABILITY_BASE_URL = "https://api.stability.ai";
@@ -37,6 +37,13 @@ export const CHATGLM_BASE_URL = "https://open.bigmodel.cn";
 export const SILICONFLOW_BASE_URL = "https://api.siliconflow.cn";
 
 export const AI302_BASE_URL = "https://api.302.ai";
+
+export const OPENROUTER_BASE_URL = "https://openrouter.ai/api";
+export const TITANAI_BASE_URL = "https://api.titandao.xyz";
+export const SHING_BASE_URL = "https://key.shing.cc";
+
+export const OLLAMA_BASE_URL = "http://localhost:11434";
+export const LMSTUDIO_BASE_URL = "http://localhost:1234";
 
 export const CACHE_URL_PREFIX = "/api/cache";
 export const UPLOAD_URL = `${CACHE_URL_PREFIX}/upload`;
@@ -134,6 +141,11 @@ export enum ServiceProvider {
   DeepSeek = "DeepSeek",
   SiliconFlow = "SiliconFlow",
   "302.AI" = "302.AI",
+  OpenRouter = "OpenRouter",
+  TitanAI = "TitanAI",
+  Shing = "Shing",
+  Ollama = "Ollama",
+  LMStudio = "LMStudio",
 }
 
 // Google API safety settings, see https://ai.google.dev/gemini-api/docs/safety-settings
@@ -372,7 +384,7 @@ You are an AI assistant with access to system tools. Your role is to help users 
   "params": {
     "name": "write_file",
     "arguments": {
-      "path": "/Users/river/dev/nextchat/test/joke.txt",
+      "path": "/Users/river/dev/titandai/test/joke.txt",
       "content": "为什么数学书总是感到忧伤？因为它有太多的问题。"
     }
   }
@@ -385,7 +397,7 @@ You are an AI assistant with access to system tools. Your role is to help users 
    {
       "method": "write_file",
       "params": {
-        "path": "NextChat_Information.txt",
+        "path": "TitanGPT_Information.txt",
         "content": "1"
     }
    }
@@ -742,6 +754,57 @@ const ai302Models = [
   "gemini-2.5-pro",
 ];
 
+const openrouterModels = [
+  "openrouter/auto",
+  "anthropic/claude-3.5-sonnet",
+  "openai/gpt-4o",
+  "openai/gpt-4o-mini",
+  "openai/o3",
+  "openai/o4-mini",
+  "google/gemini-2.0-flash-001",
+  "google/gemini-2.5-pro-preview-05-06",
+  "meta-llama/llama-3.3-70b-instruct",
+  "deepseek/deepseek-chat",
+  "deepseek/deepseek-r1",
+  "qwen/qwen3-235b-a22b",
+];
+
+const titanaiModels = [
+  "gpt-4o",
+  "gpt-4o-mini",
+  "claude-sonnet-4-20250514",
+  "deepseek-chat",
+  "deepseek-r1",
+];
+
+const shingModels = [
+  "gpt-4o",
+  "gpt-4o-mini",
+  "claude-3.5-sonnet",
+  "deepseek-chat",
+  "deepseek-r1",
+  "gemini-2.0-flash-001",
+];
+
+const ollamaModels = [
+  "llama3.2",
+  "llama3.2-vision",
+  "llama3.1",
+  "mistral",
+  "codellama",
+  "phi3",
+  "qwen2.5",
+  "deepseek-r1",
+];
+
+const lmstudioModels = [
+  "google/gemma-4-e2b",
+  "mistralai/mistral-7b-instruct",
+  "TheBloke/Llama-2-7B-Chat-GGUF",
+  "TheBloke/Mistral-7B-Instruct-v0.1-GGUF",
+  "Qwen/Qwen2.5-7B-Instruct-GGUF",
+];
+
 let seq = 1000; // 内置的模型序号生成器从1000开始
 export const DEFAULT_MODELS = [
   ...openaiModels.map((name) => ({
@@ -909,6 +972,61 @@ export const DEFAULT_MODELS = [
       sorted: 15,
     },
   })),
+  ...openrouterModels.map((name) => ({
+    name,
+    available: true,
+    sorted: seq++,
+    provider: {
+      id: "openrouter",
+      providerName: "OpenRouter",
+      providerType: "openrouter",
+      sorted: 16,
+    },
+  })),
+  ...titanaiModels.map((name) => ({
+    name,
+    available: true,
+    sorted: seq++,
+    provider: {
+      id: "titanai",
+      providerName: "TitanAI",
+      providerType: "titanai",
+      sorted: 17,
+    },
+  })),
+  ...shingModels.map((name) => ({
+    name,
+    available: true,
+    sorted: seq++,
+    provider: {
+      id: "shing",
+      providerName: "Shing",
+      providerType: "shing",
+      sorted: 18,
+    },
+  })),
+  ...ollamaModels.map((name) => ({
+    name,
+    available: true,
+    sorted: seq++,
+    provider: {
+      id: "ollama",
+      providerName: "Ollama",
+      providerType: "ollama",
+      sorted: 19,
+    },
+  })),
+  ...lmstudioModels.map((name) => ({
+    name,
+    available: true,
+    sorted: seq++,
+    provider: {
+      id: "lmstudio",
+      providerName: "LMStudio",
+      providerType: "lmstudio",
+      sorted: 20,
+    },
+  })),
 ] as const;
 
 export const CHAT_PAGE_SIZE = 15;
@@ -929,5 +1047,5 @@ export const internalAllowedWebDavEndpoints = [
 
 export const DEFAULT_GA_ID = "G-89WN60ZK2E";
 
-export const SAAS_CHAT_URL = "https://nextchat.club";
-export const SAAS_CHAT_UTM_URL = "https://nextchat.club?utm=github";
+export const SAAS_CHAT_URL = "https://titandai.ai";
+export const SAAS_CHAT_UTM_URL = "https://titandai.ai?utm=github";

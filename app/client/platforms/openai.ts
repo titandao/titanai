@@ -84,6 +84,9 @@ export class ChatGPTApi implements LLMApi {
 
   path(path: string): string {
     const accessStore = useAccessStore.getState();
+    const providerName = accessStore.useCustomConfig
+      ? accessStore.provider
+      : useChatStore.getState().currentSession().mask.modelConfig.providerName;
 
     let baseUrl = "";
 
@@ -95,7 +98,21 @@ export class ChatGPTApi implements LLMApi {
         );
       }
 
-      baseUrl = isAzure ? accessStore.azureUrl : accessStore.openaiUrl;
+      if (isAzure) {
+        baseUrl = accessStore.azureUrl;
+      } else if (providerName === ServiceProvider.OpenRouter) {
+        baseUrl = accessStore.openrouterUrl;
+      } else if (providerName === ServiceProvider.TitanAI) {
+        baseUrl = accessStore.titanaiUrl;
+      } else if (providerName === ServiceProvider.Shing) {
+        baseUrl = accessStore.shingUrl;
+      } else if (providerName === ServiceProvider.Ollama) {
+        baseUrl = accessStore.ollamaUrl;
+      } else if (providerName === ServiceProvider.LMStudio) {
+        baseUrl = accessStore.lmstudioUrl;
+      } else {
+        baseUrl = accessStore.openaiUrl;
+      }
     }
 
     if (baseUrl.length === 0) {
@@ -200,7 +217,7 @@ export class ChatGPTApi implements LLMApi {
       options.config.model.startsWith("o1") ||
       options.config.model.startsWith("o3") ||
       options.config.model.startsWith("o4-mini");
-    const isGpt5 =  options.config.model.startsWith("gpt-5");
+    const isGpt5 = options.config.model.startsWith("gpt-5");
     if (isDalle3) {
       const prompt = getMessageTextContent(
         options.messages.slice(-1)?.pop() as any,
@@ -231,7 +248,7 @@ export class ChatGPTApi implements LLMApi {
         messages,
         stream: options.config.stream,
         model: modelConfig.model,
-        temperature: (!isO1OrO3 && !isGpt5) ? modelConfig.temperature : 1,
+        temperature: !isO1OrO3 && !isGpt5 ? modelConfig.temperature : 1,
         presence_penalty: !isO1OrO3 ? modelConfig.presence_penalty : 0,
         frequency_penalty: !isO1OrO3 ? modelConfig.frequency_penalty : 0,
         top_p: !isO1OrO3 ? modelConfig.top_p : 1,
@@ -240,11 +257,10 @@ export class ChatGPTApi implements LLMApi {
       };
 
       if (isGpt5) {
-  	// Remove max_tokens if present
-  	delete requestPayload.max_tokens;
-  	// Add max_completion_tokens (or max_completion_tokens if that's what you meant)
-  	requestPayload["max_completion_tokens"] = modelConfig.max_tokens;
-
+        // Remove max_tokens if present
+        delete requestPayload.max_tokens;
+        // Add max_completion_tokens (or max_completion_tokens if that's what you meant)
+        requestPayload["max_completion_tokens"] = modelConfig.max_tokens;
       } else if (isO1OrO3) {
         // by default the o1/o3 models will not attempt to produce output that includes markdown formatting
         // manually add "Formatting re-enabled" developer message to encourage markdown inclusion in model responses
@@ -258,9 +274,8 @@ export class ChatGPTApi implements LLMApi {
         requestPayload["max_completion_tokens"] = modelConfig.max_tokens;
       }
 
-
       // add max_tokens to vision model
-      if (visionModel && !isO1OrO3 && ! isGpt5) {
+      if (visionModel && !isO1OrO3 && !isGpt5) {
         requestPayload["max_tokens"] = Math.max(modelConfig.max_tokens, 4000);
       }
     }
@@ -353,7 +368,14 @@ export class ChatGPTApi implements LLMApi {
             }
 
             const reasoning = choices[0]?.delta?.reasoning_content;
-            const content = choices[0]?.delta?.content;
+            let content = choices[0]?.delta?.content;
+
+            // Strip chat template tags from OpenRouter models
+            if (content) {
+              content = content
+                .replace(/<\/?(assistant|system|user|tool|s)>/g, "")
+                .replace(/<\|(assistant|system|user|tool|im_end|end|endoftext)\|>/g, "");
+            }
 
             // Skip if both content and reasoning_content are empty or null
             if (
